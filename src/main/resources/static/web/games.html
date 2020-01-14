@@ -1,0 +1,228 @@
+<!DOCTYPE HTML>
+<html>
+<head> 
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width , initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+
+    
+    <link rel="stylesheet" href="styles/style.css" />
+    <link rel="stylesheet" href="styles/mystyle.css">
+    <title>Player Manager</title> 
+</head>
+<body>
+   <div id = "app">
+      <div id="barra" class="d-none row">
+         
+          <div id="userNow" class = "col-8"></div>
+          <div id = logOut class="col-4" >
+               <form id = "form-logOut" v-on:submit.prevent='logOut()'>
+                   <input type="submit" value="Logout">
+               </form>
+          </div>
+      </div>
+       
+        <button id= "btn-login" type="button" class="btn btn-primary" data-toggle="modal" data-target="#logIn">
+            Sign in
+          </button>
+
+          <!-- The Modal -->
+          <div class="modal fade" id="logIn">
+            <div class="modal-dialog">
+              <div class="modal-content">
+
+                
+                <div class="modal-header">
+                  <h4 class="modal-title">Login</h4>
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                
+                <div class="modal-body">
+                    <form id="form-logIn" v-on:submit.prevent='sendDate()' method = "post">
+                        <table>
+                             <tr>
+                                <td>User:</td>
+                                <td><input class="input" type='text' name ='username' value='' ></td>
+                             </tr>
+                             <tr>
+                                <td>Password:</td>
+                                <td><input class ="input" type='password' name='password' /></td>
+                             </tr>
+                             <tr>
+                                 <td><input type = "submit" name="submit" value="Sign In"/></td>
+                                 <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#signUp" @click = "showSignUp()"> Sign up </button></td>
+                             </tr>                     
+                        </table>            
+                    </form>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+
+              </div>
+            </div>
+          </div>
+         <div class="modal fade" id="signUp">
+            <div class="modal-dialog">
+              <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                  <h4 class="modal-title">Register</h4>
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <form id="register"  v-on:submit.prevent='register()' method = "post">
+                        <table>
+                             <tr>
+                                <td>User:</td>
+                                <td><input class="input" type='text' name='userName' value='' required></td>
+                             </tr>
+                             <tr>
+                                <td>Name:</td>
+                                <td><input class="input" type='text' name='firstName' value='' required></td>
+                             </tr>
+                             <tr>
+                                <td>Email:</td>
+                                <td><input class="input" type='text' name='email' value=''required></td>
+                             </tr>
+                             <tr>
+                                <td>Password:</td>
+                                <td><input class ="input" type='password' name='password' required/></td>
+                             </tr>
+                             <tr>
+                                <td><input name="submit" type="submit" value="Register" /></td>
+                             </tr>
+                        </table>            
+                    </form>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-danger" data-dismiss="modal" >Close</button>
+                </div>
+
+              </div>
+            </div>
+        </div>
+               
+       <!--<div class="formulario d-none" id="signUp">
+          <h2>Register</h2>
+           <form id="register"  v-on:submit.prevent='register()' method = "post">
+                    <table>
+                             <tr>
+                                <td>User:</td>
+                                <td><input class="input" type='text' name='userName' value='' required></td>
+                             </tr>
+                             <tr>
+                                <td>Name:</td>
+                                <td><input class="input" type='text' name='firstName' value='' required></td>
+                             </tr>
+                             <tr>
+                                <td>Last Name:</td>
+                                <td><input class="input" type='text' name='last' value=''></td>
+                             </tr>
+                             <tr>
+                                <td>Email:</td>
+                                <td><input class="input" type='text' name='email' value=''></td>
+                             </tr>
+                             <tr>
+                                <td>Password:</td>
+                                <td><input class ="input" type='password' name='password' required/></td>
+                             </tr>
+                             <tr>
+                                <td><input name="submit" type="submit" value="submit" /></td>
+                             </tr>
+                    </table>            
+            </form>
+       </div>-->
+       <div id="newGame">
+          <button id="btn-newGame" type="button" data-toggle="tooltip" title @click = 'createGame()' data-placement="right" data-original-title ="You must be logged" >Create Game</button>
+       </div>
+       <div class="grid-container">
+          <div id = "games">
+            
+              <div class = "blocks-game row" v-for = "game in games">
+                  <div class="division col-4" id="infoGame">
+                      <p>Game: {{game.id}}</p>
+                      <p>{{game.date}}</p>
+                      <p>{{game.hour}}</p>
+                  </div>
+                  <div class="col-4" id="players">
+                      <ul>
+                          <li>{{game.startCreator}}</li>
+                          <li v-if = "gp.player.userName != game.startCreator" v-for = "gp in game.gamePlayers" >{{gp.player.userName}}</li>
+                      </ul>
+                  </div>
+                  <div class="col-4">
+                     <div class="result" v-if= "game.state == 'finish'">
+                        <p>Game Over</p> 
+                        <template v-if = "game.gamePlayers[0].score == game.gamePlayers[1].score">
+                            <h3>Tied!</h3>
+                        </template>
+                        <template v-else-if = "game.gamePlayers[0].score == 1.0">
+                            <h3>Won {{game.gamePlayers[0].player.userName}}</h3>
+                        </template>
+                        <template v-else>
+                            <h3>Won {{game.gamePlayers[1].player.userName}}</h3>
+                        </template>
+                        
+                     </div>
+                     <div class="result" v-else-if = "game.state == 'joined' && user != 'Guest'">
+                         <button type="button" @click = viewGame(game.gamePlayers) v-if = "user.userName == game.startCreator"> View Game</button>
+                         <button v-else type="button" @click = 'joinGame(game.id)'>Join Game</button>
+                     </div>
+                     <div class="result" v-else-if = "game.state == 'inCourse'">
+                         <button type="button" @click = viewGame(game.gamePlayers) v-if = "game.gamePlayers[0].player.userName == user.userName || game.gamePlayers[1].player.userName == user.userName"> View Game</button>
+                         <template v-else><h3>In course!</h3></template>
+                     </div>
+                      
+                  </div>
+                  
+              </div>
+          </div>
+           
+           
+           <div id="table-Score">
+               <table class= " table table-responsive-sm">
+                   <thead class="thead-dark"> 
+                       <tr>
+                           <th>Name</th>
+                           <th>Score</th>
+                           <th>Won</th>
+                           <th>Lost</th>
+                           <th>Tied</th>
+                       </tr>
+                   </thead>
+                   <tbody>
+                        <tr v-for= "player in players">
+                            <td>{{player.userName}}</td>
+                            <td>{{player.scoreTotal}}</td>
+                            <td>{{player.gamesWon}}</td>
+                            <td>{{player.gamesLost}}</td>
+                            <td>{{player.gamesTie}}</td>
+                        </tr>
+                   </tbody>
+               </table>
+           </div>
+       
+       </div>
+       
+  
+   </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="games.js"></script>
+    
+
+</body>
+</html>
